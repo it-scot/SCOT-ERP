@@ -93,8 +93,5 @@ $input-padding-x:      0.875rem;
 // ----- Transitions -----
 $transition-base: all 0.2s ease-in-out;
 
-// ===== Import Bootstrap =====
-@import "bootstrap/scss/bootstrap";
-
 // ===== Google Font =====
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');

@@ -25,6 +25,15 @@ import { shiftRouter } from './routes/shift.routes.js';
 import { salaryRouter } from './routes/salary.routes.js';
 import { documentRouter } from './routes/document.routes.js';
 import { fileRouter } from './routes/file.routes.js';
+import { holidayRouter } from './routes/holiday.routes.js';
+import { emailRouter } from './routes/email.routes.js';
+import { overtimeRouter } from './routes/overtime.routes.js';
+import { onboardingRouter } from './routes/onboarding.routes.js';
+import { resignationRouter } from './routes/resignation.routes.js';
+import { evaluationRouter } from './routes/evaluation.routes.js';
+import { kpiRouter } from './routes/kpi.routes.js';
+import { inventoryRouter } from './routes/inventory.routes.js';
+import { calendarRouter } from './routes/calendar.routes.js';
 
 const app = express();
 
@@ -71,6 +80,15 @@ app.use('/api/shifts', shiftRouter);
 app.use('/api/salary', salaryRouter);
 app.use('/api/documents', documentRouter);
 app.use('/api/files', fileRouter);
+app.use('/api/holidays', holidayRouter);
+app.use('/api/emails', emailRouter);
+app.use('/api/overtime', overtimeRouter);
+app.use('/api/onboarding', onboardingRouter);
+app.use('/api/resignation', resignationRouter);
+app.use('/api/evaluations', evaluationRouter);
+app.use('/api/kpi', kpiRouter);
+app.use('/api/inventory', inventoryRouter);
+app.use('/api/calendar', calendarRouter);
 
 // Health check
 app.get('/api/health', (_req, res) => {

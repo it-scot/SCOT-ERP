@@ -289,6 +289,7 @@ export interface AuditLog extends BaseEntity {
 // ---- Onboarding ----
 export interface OnboardingCase extends BaseEntity {
   employeeId: string;
+  employeeName: string;
   joinDate: string;
   designation: string;
   departmentCode: string;
