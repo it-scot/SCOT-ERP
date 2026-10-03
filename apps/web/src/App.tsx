@@ -17,6 +17,8 @@ import WorkflowsPage from './pages/staff/workflows/WorkflowsPage';
 import StudentLayout from './components/student/StudentLayout';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentProfile from './pages/student/StudentProfile';
+import UnderConstruction from './components/common/UnderConstruction';
+import ThemeSettingsPage from './pages/admin/ThemeSettingsPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -53,16 +55,23 @@ function AppRoutes() {
         <Route path="dashboard" element={<Dashboard />} />
         
         {/* Placeholder Routes for other modules */}
-        <Route path="employees" element={<EmployeeList />} />
+        <Route path="employees" element={<UnderConstruction />} />
         <Route path="employees/:id" element={<EmployeeProfile />} />
         <Route path="attendance" element={<AttendancePage />} />
-        <Route path="leave" element={<LeavePage />} />
+        <Route path="leave" element={<UnderConstruction />} />
+        <Route path="requests" element={<UnderConstruction />} />
         <Route path="evaluations" element={<EvaluationsPage />} />
-        <Route path="kpi" element={<KpiPage />} />
-        <Route path="inventory" element={<InventoryPage />} />
-        <Route path="tasks" element={<TasksPage />} />
-        <Route path="workflows" element={<WorkflowsPage />} />
+        <Route path="kpi" element={<UnderConstruction />} />
+        <Route path="inventory" element={<UnderConstruction />} />
+        <Route path="tasks" element={<UnderConstruction />} />
+        <Route path="workflows" element={<UnderConstruction />} />
+        <Route path="settings" element={<ThemeSettingsPage />} />
         <Route path="profile" element={<ProfileRedirect />} />
+        
+        {/* HOD Routes */}
+        <Route path="hod/leaves" element={<UnderConstruction />} />
+        <Route path="hod/requests" element={<UnderConstruction />} />
+        <Route path="hod/evaluations" element={<UnderConstruction />} />
       </Route>
 
       {/* Student Portal Routes */}

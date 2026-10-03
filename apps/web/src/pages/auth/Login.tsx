@@ -10,12 +10,12 @@ const DEMO_ACCOUNTS = [
   { role: 'Admin (Purchasing)', email: 'admin@scot.lk' },
   { role: 'HOD (BM)', email: 'chaminda@scot.lk' },
   { role: 'HOD (IT)', email: 'lakshmi@scot.lk' },
-  { role: 'Employee', email: 'nimal@scot.lk' }, // Might need to check if this seeded user exists, otherwise any seeded email
+  { role: 'Normal Employee', email: 'hashini@scot.lk' }, 
   { role: 'Student', email: 'student1@student.scot.lk' },
 ];
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('hashini@scot.lk');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -57,9 +57,18 @@ const Login = () => {
           <Col md={8} lg={6} xl={5}>
             <div className="text-center mb-4">
               <div className="d-inline-flex align-items-center justify-content-center mb-3">
-                <img src="/scot-logo.png" alt="SCoT ERP Logo" style={{ width: 64, height: 64, objectFit: 'contain' }} />
+                <img src="/scot-logo.png" alt="SCOTX Logo" style={{ width: 64, height: 64, objectFit: 'contain' }} />
               </div>
-              <h2 className="fw-bold text-dark">SCoT ERP</h2>
+              <h2 className="fw-bold text-dark mb-1" style={{ letterSpacing: '1px' }}>
+                SCOT<span style={{ 
+                  background: 'linear-gradient(45deg, #ff6b6b, #feca57)', 
+                  WebkitBackgroundClip: 'text', 
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 900,
+                  fontSize: '1.2em',
+                  marginLeft: '2px'
+                }}>X</span>
+              </h2>
               <p className="text-muted">Staff Management & Performance System</p>
             </div>
 

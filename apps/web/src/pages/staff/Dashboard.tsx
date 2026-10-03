@@ -3,6 +3,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -130,52 +131,158 @@ const AdminDashboard = ({ data }: { data: any }) => {
 };
 
 const EmployeeDashboard = ({ data }: { data: any }) => {
-  if (!data) return null;
+  const { user } = useAuth();
+  
+  const dummyAttendanceData = [
+    { day: 'Mon', hours: 8, fill: '#0d6efd' },
+    { day: 'Tue', hours: 8.5, fill: '#0d6efd' },
+    { day: 'Wed', hours: 7.5, fill: '#feca57' },
+    { day: 'Thu', hours: 9, fill: '#0d6efd' },
+    { day: 'Fri', hours: 8, fill: '#0d6efd' },
+    { day: 'Sat', hours: 4, fill: '#48dbfb' },
+    { day: 'Sun', hours: 0, fill: '#c8d6e5' },
+  ];
+
+  const dummyNews = [
+    { id: 1, title: 'Annual General Meeting 2026', date: 'Oct 10, 2026', type: 'Announcement', color: 'primary', icon: 'bi-megaphone' },
+    { id: 2, title: 'System Maintenance Scheduled', date: 'Oct 15, 2026', type: 'IT Alert', color: 'warning', icon: 'bi-hdd-network' },
+    { id: 3, title: 'New Employee Benefits Policy', date: 'Oct 01, 2026', type: 'HR Update', color: 'success', icon: 'bi-people' },
+  ];
 
   return (
-    <Row className="g-4 mb-4">
-      <Col md={4}>
-        <Card className="h-100 border-0 shadow-sm bg-primary text-white">
-          <Card.Body>
-            <h5 className="fw-semibold mb-4 text-white-50">Today's Status</h5>
-            <h2 className="fw-bold mb-1">{data.todayAttendance?.status || 'Not Punched In'}</h2>
-            {data.todayAttendance?.firstPunchIn && (
-              <p className="mb-0 text-white-50">In: {new Date(data.todayAttendance.firstPunchIn).toLocaleTimeString()}</p>
-            )}
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={4}>
-        <Card className="h-100 border-0 shadow-sm">
-          <Card.Body>
-            <div className="d-flex justify-content-between align-items-start">
-              <div>
-                <p className="text-muted mb-1 fw-medium">Pending Leaves</p>
-                <h2 className="fw-bold mb-0">{data.pendingLeaveRequests || 0}</h2>
+    <>
+      <Row className="g-4 mb-4">
+        {/* Basic Details */}
+        <Col lg={7}>
+          <Card className="border-0 shadow-sm h-100" style={{ borderRadius: '16px', overflow: 'hidden' }}>
+            <div className="bg-primary bg-gradient p-4 text-white d-flex align-items-center gap-4">
+              <div className="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 shadow" style={{ width: 80, height: 80, fontSize: '2.5rem', fontWeight: 'bold' }}>
+                {user?.preferredName?.charAt(0) || 'U'}
               </div>
-              <div className="rounded-circle bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center" style={{ width: 48, height: 48 }}>
-                <i className="bi bi-hourglass-split fs-4"></i>
+              <div>
+                <h3 className="fw-bold mb-1">{user?.nameInFull || user?.preferredName || 'Employee Name'}</h3>
+                <p className="mb-0 text-white-50 fs-5">{user?.designation || 'Staff Member'}</p>
               </div>
             </div>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={4}>
-        <Card className="h-100 border-0 shadow-sm">
-          <Card.Body>
-            <div className="d-flex justify-content-between align-items-start">
-              <div>
-                <p className="text-muted mb-1 fw-medium">Open Tasks</p>
-                <h2 className="fw-bold mb-0">{data.openTasks || 0}</h2>
+            <Card.Body className="p-4">
+              <Row className="g-4">
+                <Col sm={6}>
+                  <p className="text-muted mb-1 fs-7 text-uppercase fw-bold"><i className="bi bi-person-badge me-2"></i>Employee ID</p>
+                  <p className="fw-semibold mb-0 fs-5">{user?.staffId || 'EMP-000'}</p>
+                </Col>
+                <Col sm={6}>
+                  <p className="text-muted mb-1 fs-7 text-uppercase fw-bold"><i className="bi bi-building me-2"></i>Department</p>
+                  <p className="fw-semibold mb-0 fs-5">{user?.departmentCode || 'N/A'}</p>
+                </Col>
+                <Col sm={6}>
+                  <p className="text-muted mb-1 fs-7 text-uppercase fw-bold"><i className="bi bi-envelope me-2"></i>Email Address</p>
+                  <p className="fw-semibold mb-0 fs-6">{user?.email || 'N/A'}</p>
+                </Col>
+                <Col sm={6}>
+                  <p className="text-muted mb-1 fs-7 text-uppercase fw-bold"><i className="bi bi-circle-fill text-success me-2" style={{ fontSize: '10px' }}></i>Status</p>
+                  <p className="fw-semibold mb-0 fs-5 text-success">Active</p>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Working Schedule */}
+        <Col lg={5}>
+          <Card className="border-0 shadow-sm h-100" style={{ borderRadius: '16px' }}>
+            <Card.Body className="p-4 d-flex flex-column">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h5 className="fw-bold mb-0">Working Schedule</h5>
+                <div className="bg-primary bg-opacity-10 p-2 rounded-circle text-primary">
+                  <i className="bi bi-calendar-week fs-5"></i>
+                </div>
               </div>
-              <div className="rounded-circle bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style={{ width: 48, height: 48 }}>
-                <i className="bi bi-list-check fs-4"></i>
+              
+              <div className="p-4 bg-light rounded-4 mb-4 border border-light shadow-sm">
+                <div className="d-flex justify-content-between align-items-center mb-2">
+                  <span className="fw-semibold text-primary"><i className="bi bi-clock-history me-2"></i>Current Shift</span>
+                  <span className="badge bg-white text-dark border">Regular</span>
+                </div>
+                <h3 className="fw-bold text-dark mb-1">08:30 AM <span className="text-muted fs-4 mx-2">-</span> 05:30 PM</h3>
+                <p className="text-muted fs-6 mb-0">Monday to Friday</p>
               </div>
-            </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+
+              <div className="mt-auto">
+                <p className="text-muted mb-2 fw-bold fs-7 text-uppercase">Upcoming Holiday</p>
+                <div className="d-flex align-items-center p-3 border rounded-4 border-start border-4 border-warning bg-warning bg-opacity-10 shadow-sm">
+                  <div className="me-3 text-center border-end border-warning pe-3">
+                    <h4 className="fw-bold mb-0 text-dark">14</h4>
+                    <span className="text-muted fs-7 text-uppercase fw-bold">Oct</span>
+                  </div>
+                  <div>
+                    <h6 className="fw-bold mb-1">Poya Day Holiday</h6>
+                    <span className="badge bg-warning text-dark">Public Holiday</span>
+                  </div>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row className="g-4">
+        {/* Attendance Graph */}
+        <Col lg={7}>
+          <Card className="border-0 shadow-sm h-100" style={{ borderRadius: '16px' }}>
+            <Card.Body className="p-4">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h5 className="fw-bold mb-0">Weekly Attendance</h5>
+                <span className="badge bg-light text-dark border">This Week</span>
+              </div>
+              <div style={{ width: '100%', height: 260 }}>
+                <ResponsiveContainer>
+                  <BarChart data={dummyAttendanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#6c757d', fontSize: 13, fontWeight: 500 }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#6c757d', fontSize: 13 }} />
+                    <Tooltip 
+                      cursor={{ fill: '#f8f9fa' }} 
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px rgba(0,0,0,0.1)' }} 
+                    />
+                    <Bar dataKey="hours" radius={[6, 6, 0, 0]} barSize={36} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* SCOT News */}
+        <Col lg={5}>
+          <Card className="border-0 shadow-sm h-100" style={{ borderRadius: '16px' }}>
+            <Card.Body className="p-4">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h5 className="fw-bold mb-0">SCOT News</h5>
+                <div className="bg-success bg-opacity-10 p-2 rounded-circle text-success">
+                  <i className="bi bi-newspaper fs-5"></i>
+                </div>
+              </div>
+              
+              <div className="d-flex flex-column gap-3">
+                {dummyNews.map(news => (
+                  <div key={news.id} className="d-flex p-3 rounded-4 border align-items-center" style={{ transition: 'all 0.2s ease', cursor: 'pointer' }} onMouseOver={(e) => e.currentTarget.classList.add('shadow-sm')} onMouseOut={(e) => e.currentTarget.classList.remove('shadow-sm')}>
+                    <div className={`bg-${news.color} bg-opacity-10 p-3 rounded-circle me-3 text-${news.color} shadow-sm d-flex align-items-center justify-content-center`} style={{ width: 50, height: 50 }}>
+                      <i className={`bi ${news.icon} fs-4`}></i>
+                    </div>
+                    <div>
+                      <span className={`badge bg-${news.color} bg-opacity-10 text-${news.color} mb-1 border border-${news.color} border-opacity-25`}>{news.type}</span>
+                      <h6 className="fw-bold mb-1 text-dark" style={{ lineHeight: '1.4' }}>{news.title}</h6>
+                      <p className="text-muted fs-7 mb-0 fw-medium"><i className="bi bi-clock me-1"></i> {news.date}</p>
+                    </div>
+                    <i className="bi bi-chevron-right ms-auto text-muted opacity-50"></i>
+                  </div>
+                ))}
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
   );
 };
 
